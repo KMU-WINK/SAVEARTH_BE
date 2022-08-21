@@ -76,14 +76,14 @@ WSGI_APPLICATION = 'SAVEARTH_BE.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'savearth',
-        'USER': 'savearth',
-        'PAWSSWORD': 'wink1234',
-        'HOST': 'savearth.c6en6awf5rdv.ap-northeast-2.rds.amazonaws.com',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"'
+        'ENGINE': 'django.db.backends.mysql', # engine: mysql
+        'NAME' : 'savearth', # DB Name
+        'USER' : 'savearth', # DB User
+        'PASSWORD' : 'wink1234', # Password
+        'HOST': 'savearth.c6en6awf5rdv.ap-northeast-2.rds.amazonaws.com', # 생성한 데이터베이스 엔드포인트
+        'PORT': '3306', # 데이터베이스 포트
+        'OPTIONS':{
+            'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'"
         }
     }
 }
@@ -111,9 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
