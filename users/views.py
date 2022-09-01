@@ -1,47 +1,43 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect
-from .models import User
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from .serializers import UserSerializer
+from .models import User
+from rest_framework import generics
 
-# Create your views here.
-@api_view(['GET'])
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            print('인증')
-            login(request, user)
-        else:
-            pass
-    return Response('its working')
-    # return render(request, "users/login.html")
+from django.contrib.auth import login, logout
+from rest_framework import permissions
+from rest_framework import views, status
+from rest_framework.response import Response
 
-def logout_view(request):
-    logout(request)
-    return redirect("user:login")
+from . import serializers
 
-def signup_view(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        nickname = request.POST["nickname"]
-        birth_year = request.POST["birth_year"]
-        birth_month = request.POST["birth_month"]
-        birth_day = request.POST["birth_day"]
-        gender = request.POST["gender"]
+# 회원가입
+class UserCreate(generics.CreateAPIView):
+    permission_classes = (permissions.AllowAny,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-        user = User.objects.create_user(username, '', password)
-        user.nickname = nickname
-        user.birth_year = birth_year
-        user.birth_month = birth_month
-        user.birth_day = birth_day  
-        user.gender = gender
-        user.save()
-        return redirect("user:login")
-        
-    return render(request, "users/signup.html")
+# 로그인
+class LoginView(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = serializers.LoginSerializer(data=self.request.data,context={ 'request': self.request })
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return Response(None, status=status.HTTP_202_ACCEPTED)
+    
+    def get(self, reqeust):
+        return Response(None, status=status.HTTP_202_ACCEPTED)
+
+# 로그아웃
+class LogoutView(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        logout(request)
+        return Response(None, status=status.HTTP_202_ACCEPTED)
+    
+    def get(self, reqeust):
+        return Response(None, status=status.HTTP_202_ACCEPTED)
+
