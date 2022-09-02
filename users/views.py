@@ -13,6 +13,7 @@ from . import serializers
 # 회원가입
 class UserCreate(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
+    
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -32,7 +33,6 @@ class LoginView(views.APIView):
 
 # 로그아웃
 class LogoutView(views.APIView):
-    permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
         logout(request)
