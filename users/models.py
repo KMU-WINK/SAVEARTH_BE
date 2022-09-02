@@ -1,31 +1,82 @@
+from pyexpat import model
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-class Trash(models.Model):
-    address = models.CharField(max_length=64, primary_key=True)
-    trash_x = models.FloatField()
-    trash_y = models.FloatField()
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+class UserManager(BaseUserManager):
+    # 일반 user 생성
+    def create_user(self, email, nickname, name, birth_year, birth_month, birth_day, gender, password=None, is_admin=False, is_staff=False, is_active=True):
+        if not email:
+            raise ValueError('must have user email')
+        if not nickname:
+            raise ValueError('must have user nickname')
+        if not name:
+            raise ValueError('must have user name')
+        user = self.model(
+            email = self.normalize_email(email),
+            nickname = nickname,
+            name = name,
+            birth_year = birth_year,
+            birth_month=birth_month,
+            birth_day=birth_day,
+            gender = gender,
+        )
+        user.admin = is_admin
+        user.staff = is_staff
+        user.active = is_active
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    # 관리자 user 생성
+    def create_superuser(self, email, nickname, name, birth_year, birth_month, birth_day, gender, password=None):
+        user = self.create_user(
+            email,
+            password = password,
+            nickname = nickname,
+            name = name,
+            birth_year = birth_year,
+            birth_month=birth_month,
+            birth_day=birth_day,
+            gender = gender,
+            is_staff=True,
+            is_admin=True,
+        )
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
 
-class Trashcan(models.Model):
-    address = models.CharField(max_length=64, primary_key=True)
-    trashcan_x = models.FloatField()
-    trashcan_y = models.FloatField()
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+class User(AbstractBaseUser):
+    id = models.AutoField(primary_key=True)
+    email = models.EmailField(default='', max_length=100, null=False, blank=False, unique=True)
+    nickname = models.CharField(default='', max_length=100, null=False, blank=False, unique=True)
+    name = models.CharField(default='', max_length=100, null=False, blank=False)
+    birth_year = models.IntegerField(default=0, null=False, blank=False)
+    birth_month = models.IntegerField(default=0, null=False, blank=False)
+    birth_day = models.IntegerField(default=0, null=False, blank=False)
+    gender = models.CharField(default='',max_length=10, null=False, blank=False)
 
-class Path(models.Model):
-    id = models.CharField(max_length=64, primary_key= True)
-    steps = models.IntegerField()
-    time = models.TimeField()
-    distance = models.IntegerField()
-    img = models.CharField(max_length=128)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    # User 모델의 필수 field
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)    
+    is_admin = models.BooleanField(default=False)
+    
+    # 헬퍼 클래스 사용
+    objects = UserManager()
 
-# Create your models here.
+    # 사용자의 username field는 nickname으로 설정
+    USERNAME_FIELD = 'nickname'
+    # 필수로 작성해야하는 field
+    REQUIRED_FIELDS = ['email', 'name', 'birth_year', 'birth_month', 'birth_day', 'gender']
 
-class User(AbstractUser):
-    nickname = models.CharField(max_length=20)
-    birth_year = models.CharField(max_length=4)
-    birth_month = models.CharField(max_length=2)
-    birth_day = models.CharField(max_length=2)
-    gender = models.CharField(max_length=10)
+    def __str__(self):
+        return self.nickname
+
+    @property
+    def is_staff(self):
+        return self.is_admin
+    
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+        
+    def has_module_perms(self, app_label):
+        return self.is_admin

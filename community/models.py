@@ -1,17 +1,25 @@
 from email.policy import default
 from django.db import models
+from users.models import User
 
 # Create your models here.
 class Board(models.Model):
-    idx = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, null=False, blank=False)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(null=False, max_length=100)
     location = models.CharField(max_length=10)
     board_img = models.ImageField(null=True)
-    content = models.TextField(null=False)
+    content = models.TextField()
     liked = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.title
+
 class Comment(models.Model):
-    idx=models.AutoField(primary_key=True)
-    board_idx = models.IntegerField(null=False)
-    writer=models.CharField(null=False, max_length=50)
-    content = models.TextField(null=False)
+    id = models.AutoField(primary_key=True, null=False, blank=False)
+    board = models.ForeignKey(Board, null=False, blank=False, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
+    comment = models.TextField()
+
+    def __str__(self):
+        return self.comment
