@@ -1,6 +1,7 @@
 from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from rest_framework.authtoken.models import Token
 
 class UserManager(BaseUserManager):
     # 일반 user 생성
@@ -25,6 +26,8 @@ class UserManager(BaseUserManager):
         user.active = is_active
         user.set_password(password)
         user.save(using=self._db)
+        Token.objects.create(user=user)
+
         return user
     
     # 관리자 user 생성
@@ -43,6 +46,7 @@ class UserManager(BaseUserManager):
         )
         user.is_admin = True
         user.save(using=self._db)
+
         return user
 
 class User(AbstractBaseUser):
@@ -57,7 +61,7 @@ class User(AbstractBaseUser):
 
     # User 모델의 필수 field
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)    
+    is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     
     # 헬퍼 클래스 사용
