@@ -36,4 +36,3 @@ class LogoutView(views.APIView):
     
     def get(self, reqeust):
         return Response(None, status=status.HTTP_202_ACCEPTED)
-
