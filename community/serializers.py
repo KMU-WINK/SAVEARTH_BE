@@ -7,7 +7,7 @@ class BoardSerialier(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source = 'user.nickname')
     class Meta:
         model = Board
-        fields = ['id', 'user', 'title', 'location', 'board_img', 'content', 'liked']
+        fields = ['id', 'user', 'title', 'location', 'board_img', 'content', 'liked', 'comment_cnt']
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source = 'user.nickname')

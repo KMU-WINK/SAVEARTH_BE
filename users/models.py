@@ -3,6 +3,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from rest_framework.authtoken.models import Token
 
+
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 class UserManager(BaseUserManager):
     # 일반 user 생성
     def create_user(self, email, nickname, name, birth_year, birth_month, birth_day, gender, password=None, is_admin=False, is_staff=False, is_active=True):
@@ -26,7 +31,6 @@ class UserManager(BaseUserManager):
         user.active = is_active
         user.set_password(password)
         user.save(using=self._db)
-        Token.objects.create(user=user)
 
         return user
     
@@ -48,6 +52,11 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
+
+    @receiver(post_save, sender=settings.AUTH_USER_MODEL)
+    def create_auth_token(sender, instance=None, created=False, **kwargs):
+        if created:
+            Token.objects.create(user=instance)
 
 class User(AbstractBaseUser):
     id = models.AutoField(primary_key=True)

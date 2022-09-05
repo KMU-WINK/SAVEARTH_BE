@@ -1,7 +1,7 @@
 from .serializers import UserSerializer, LoginSerializer
 from django.contrib.auth import login, logout
 from .models import User
-from rest_framework import views, status, permissions, generics
+from rest_framework import views, status, permissions, generics, authentication
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
@@ -36,3 +36,13 @@ class LogoutView(views.APIView):
     
     def get(self, reqeust):
         return Response(None, status=status.HTTP_202_ACCEPTED)
+
+# 유저 정보
+class UserView(views.APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+    def get(self, request, format=None):
+        usernames = request.user.nickname
+        queryset = User.objects.filter(nickname=usernames)
+        return Response(queryset.values())
