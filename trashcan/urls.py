@@ -3,7 +3,7 @@ from .views import TrashcanViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('trashcan', TrashcanViewSet)
+router.register('', TrashcanViewSet)
 
 urlpatterns = [
     path('', include(router.urls))
