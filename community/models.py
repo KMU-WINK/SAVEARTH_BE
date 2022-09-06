@@ -1,4 +1,4 @@
-from email.policy import default
+from statistics import mode
 from django.db import models
 from users.models import User
 
@@ -11,9 +11,13 @@ class Board(models.Model):
     board_img = models.ImageField(null=True)
     content = models.TextField()
     liked = models.IntegerField(default=0)
+    comment_cnt = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
+
+    def comment_up(self):
+        self.comment_cnt += 1
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)
