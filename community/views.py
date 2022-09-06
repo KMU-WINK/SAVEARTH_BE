@@ -1,5 +1,5 @@
-from .models import Board, Comment
-from .serializers import BoardSerialier, CommentSerializer
+from .models import Board, Comment, Profile
+from .serializers import BoardSerialier, CommentSerializer, ProfileSerialier
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -34,3 +34,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         qs = self.queryset.filter(board_id=board_id)
         serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
+
+class LiketViewSet(viewsets.ModelViewSet):
+    authentication_classes = [BasicAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerialier
+
+    def perform_create(self, serializer):
+        print('hi')
+        return Response()
