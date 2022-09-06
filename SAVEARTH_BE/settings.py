@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'route',
     'trash',
     'trashcan',
+    'django_filters',
 ]
 
 REST_FRAMEWORK = {
