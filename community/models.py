@@ -10,7 +10,7 @@ class Board(models.Model):
     location = models.CharField(max_length=10)
     board_img = models.ImageField(null=True)
     content = models.TextField()
-    liked = models.IntegerField(default=0)
+    like_cnt = models.IntegerField(default=0)
     comment_cnt = models.IntegerField(default=0)
 
     def __str__(self):
@@ -27,3 +27,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nickname = models.TextField(max_length=10) # 없어도 댐
+    like_posts = models.ManyToManyField('Board', blank=True, related_name='like_users')
+
+    def __str__(self):
+        return self.nickname
