@@ -22,4 +22,5 @@ urlpatterns = [
     path('community/', include('community.urls')),
     path('trashcan/', include('trashcan.urls')),
     path('trash/', include('trash.urls')),
+    path('route/', include('route.urls')),
 ]
