@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from trashcan import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('users.urls')),
     path('community/', include('community.urls')),
-    path('trashcan/', include('trashcan.urls'))
+    path('trashcan/', include('trashcan.urls')),
+    path('trash/', include('trash.urls')),
+    path('route/', include('route.urls')),
 ]
