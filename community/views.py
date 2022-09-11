@@ -1,13 +1,15 @@
-from .models import Board, Comment, Profile
-from .serializers import BoardSerialier, CommentSerializer, ProfileSerialier
-from rest_framework import viewsets
+from .models import Board, Comment, Liked
+from .serializers import BoardSerialier, CommentSerializer, LikedSerialier
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 
 class BoardViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Board.objects.all()
@@ -27,7 +29,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(user = self.request.user)
         cntUp = Board.objects.get(id=self.request.data['board'])
         cntUp.comment_up()
-        cntUp.save()
+        cntUp.save() 
 
     @action(detail=False, methods=["get"], url_path=r"(?P<board_id>\w+)")
     def public_list(self, request, board_id=None):
@@ -38,9 +40,29 @@ class CommentViewSet(viewsets.ModelViewSet):
 class LiketViewSet(viewsets.ModelViewSet):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerialier
+    queryset = Liked.objects.all()
+    serializer_class = LikedSerialier
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user_id']
 
     def perform_create(self, serializer):
-        print('hi')
-        return Response()
+        board = Board.objects.get(id=self.request.data['like_posts'])
+        liked_list = Liked.objects.all()
+        TorF = True
+        for i in liked_list:
+            if int(i.user_id) == int(self.request.data['user']):
+                if int(i.like_posts_id) == int(self.request.data['like_posts']):
+                    TorF = False
+                    board.like_down()
+                    board.save()
+                    i.delete()
+                    break
+                else:
+                    pass
+            else:
+                pass
+        if TorF == True:
+            board.like_up()
+            board.save()
+            serializer.save(user = self.request.user)
