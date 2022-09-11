@@ -8,8 +8,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 class TrashcanViewSet(viewsets.ModelViewSet):
     # csrftoken 사용시 아래 두 코드 풀기
-    # authentication_classes = [BasicAuthentication, SessionAuthentication]
-    # permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    authentication_classes = [BasicAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Trashcan.objects.all()
     serializer_class = TrashcanSerializer
 
