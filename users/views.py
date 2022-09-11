@@ -42,6 +42,7 @@ class UserView(views.APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserSerializer
+    
     def get(self, request, format=None):
         usernames = request.user.nickname
         queryset = User.objects.filter(nickname=usernames)

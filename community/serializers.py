@@ -1,4 +1,4 @@
-from .models import Board, Comment, Profile
+from .models import Board, Comment, Liked
 from rest_framework import serializers
 
 class BoardSerialier(serializers.ModelSerializer):
@@ -13,9 +13,7 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'board', 'user', 'comment']
 
-class ProfileSerialier(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source = 'user.id')
-    nickname = serializers.ReadOnlyField(source = 'user.nickname')
+class LikedSerialier(serializers.ModelSerializer):
     class Meta:
-        model = Profile
-        fields = ['user', 'nickname']
+        model = Liked
+        fields = ['user', 'like_posts']
