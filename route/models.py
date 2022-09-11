@@ -7,5 +7,5 @@ class Route(models.Model):
     steps = models.IntegerField()
     starttime = models.DateTimeField()
     endtime = models.DateTimeField()
-    distance = models.FloatField()
+    distance = models.IntegerField()
     # img = models.CharField(max_length=128)

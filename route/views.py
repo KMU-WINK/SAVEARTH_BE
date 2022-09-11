@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 
 class RouteViewSet(viewsets.ModelViewSet):
-    # authentication_classes = [BasicAuthentication, SessionAuthentication]
-    # permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    authentication_classes = [BasicAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
 
