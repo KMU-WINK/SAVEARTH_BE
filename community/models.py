@@ -1,4 +1,3 @@
-from statistics import mode
 from django.db import models
 from users.models import User
 
@@ -10,14 +9,20 @@ class Board(models.Model):
     location = models.CharField(max_length=10)
     board_img = models.ImageField(null=True)
     content = models.TextField()
-    like_cnt = models.IntegerField(default=0)
-    comment_cnt = models.IntegerField(default=0)
+    like_cnt = models.PositiveIntegerField(default=0)
+    comment_cnt = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
 
     def comment_up(self):
         self.comment_cnt += 1
+
+    def like_up(self):
+        self.like_cnt += 1
+    
+    def like_down(self):
+        self.like_cnt -= 1
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)
@@ -28,10 +33,9 @@ class Comment(models.Model):
     def __str__(self):
         return self.comment
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nickname = models.TextField(max_length=10) # 없어도 댐
-    like_posts = models.ManyToManyField('Board', blank=True, related_name='like_users')
+class Liked(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    like_posts = models.ForeignKey(Board, on_delete=models.CASCADE, default=0)
 
     def __str__(self):
-        return self.nickname
+        return str(self.user)
