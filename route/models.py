@@ -8,4 +8,4 @@ class Route(models.Model):
     starttime = models.DateTimeField()
     endtime = models.DateTimeField()
     distance = models.IntegerField()
-    # img = models.CharField(max_length=128)
+    image = models.ImageField(upload_to="")
