@@ -3,10 +3,9 @@ from rest_framework import serializers
 
 class BoardSerialier(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source = 'user.nickname')
-    board_img = serializers.ImageField(use_url=True)
     class Meta:
         model = Board
-        fields = ['id', 'user', 'title', 'location', 'board_img', 'content', 'like_cnt', 'comment_cnt']
+        fields = ['id', 'user', 'title', 'location', 'content', 'like_cnt', 'comment_cnt']
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source = 'user.nickname')
