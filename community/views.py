@@ -2,16 +2,12 @@ from .models import Board, Comment, Liked
 from .serializers import BoardSerialier, CommentSerializer, LikedSerialier
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .permissions import IsOwnerOrReadOnly
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
-from django_filters.rest_framework import DjangoFilterBackend
 
 class BoardViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    authentication_classes = [TokenAuthentication]
     queryset = Board.objects.all()
     serializer_class = BoardSerialier
 
@@ -19,8 +15,7 @@ class BoardViewSet(viewsets.ModelViewSet):
         serializer.save(user = self.request.user)
 
 class CommentViewSet(viewsets.ModelViewSet):
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    authentication_classes = [TokenAuthentication]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     lookup_field = 'board_id'
@@ -38,13 +33,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 class LiketViewSet(viewsets.ModelViewSet):
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    authentication_classes = [TokenAuthentication]
     queryset = Liked.objects.all()
     serializer_class = LikedSerialier
-
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['user_id']
 
     def perform_create(self, serializer):
         board = Board.objects.get(id=self.request.data['like_posts'])

@@ -7,7 +7,6 @@ class Board(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(null=False, max_length=100)
     location = models.CharField(max_length=10)
-    board_img = models.ImageField(null=True)
     content = models.TextField()
     like_cnt = models.PositiveIntegerField(default=0)
     comment_cnt = models.PositiveIntegerField(default=0)
