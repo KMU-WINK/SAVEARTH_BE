@@ -1,6 +1,8 @@
 from .models import Board, Comment, Liked
 from .serializers import BoardSerialier, CommentSerializer, LikedSerialier
 from rest_framework import viewsets, permissions
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
@@ -8,6 +10,7 @@ from rest_framework.decorators import action
 class BoardViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Board.objects.all()
     serializer_class = BoardSerialier
 
@@ -16,6 +19,7 @@ class BoardViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     lookup_field = 'board_id'
@@ -34,6 +38,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class LiketViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Liked.objects.all()
     serializer_class = LikedSerialier
 
