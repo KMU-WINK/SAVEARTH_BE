@@ -7,4 +7,4 @@ class Route(models.Model):
     steps = models.IntegerField(null = True)
     time = models.CharField(max_length=16)
     datetime = models.DateTimeField()
-    distance = models.IntegerField()
+    distance = models.FloatField()
