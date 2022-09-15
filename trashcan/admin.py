@@ -4,7 +4,3 @@ from .models import Trashcan
 class TrashcanAdmin(admin.ModelAdmin):
     model = Trashcan
     list_display = ['id']
-
-    
-
-# admin.site.register(Trashcan)

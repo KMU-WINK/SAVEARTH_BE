@@ -6,6 +6,3 @@ class Trashcan(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     trashcan_x = models.FloatField()
     trashcan_y = models.FloatField()
-
-    def __str__(self):
-        return self.address
