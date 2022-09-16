@@ -1,6 +1,6 @@
 from .models import Board, Comment, Liked
 from .serializers import BoardSerialier, CommentSerializer, LikedSerialier
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
@@ -8,7 +8,6 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 
 class BoardViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Board.objects.all()
