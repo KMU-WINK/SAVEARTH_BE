@@ -10,8 +10,6 @@ SAVEARTH(세이버스)🌱 : KBSC 줍깅, 플로깅 앱 백엔드
 
 ## 실행 명령어
 
-```json
+```
 python manage.py runserver
-또는
-python3 manage.py runserver
 ```
