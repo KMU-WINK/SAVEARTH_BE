@@ -54,7 +54,8 @@ class UserManager(BaseUserManager):
     def create_auth_token(sender, instance=None, created=False, **kwargs):
         if created:
             Token.objects.create(user=instance)
-
+    # 유저 생성 되었다면 User Auth Token 생성
+    
 class User(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(default='', max_length=100, null=False, blank=False, unique=True)

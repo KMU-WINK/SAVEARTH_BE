@@ -31,6 +31,7 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(msg, code='authorization')
         attrs['user'] = user
         return attrs
+    	# 아이디와 비밀 번호 유효성 검사
 
 class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
@@ -45,7 +46,8 @@ class UserSerializer(serializers.ModelSerializer):
             gender = validated_data['gender'],
         )
         return user
-
+    	# user 모델 설정
+        
     class Meta:
         model = User
         fields = ['nickname', 'password', 'email', 'name','birth_year','birth_month','birth_day','gender']

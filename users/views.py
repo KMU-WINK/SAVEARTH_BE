@@ -23,7 +23,10 @@ class LoginView(views.APIView):
         login(request, user)
         token = Token.objects.get(user=user)
         return Response({"Token": token.key}, status=status.HTTP_202_ACCEPTED)
-    
+
+    # django auth 내부의 login() 매소드 이용해서 로그인
+	#유저 로그인시 회원가입때 생성했던 Token return
+
     def get(self, reqeust):
         return Response(None, status=status.HTTP_202_ACCEPTED)
 
@@ -33,7 +36,8 @@ class LogoutView(views.APIView):
     def post(self, request, format=None):
         logout(request)
         return Response(None, status=status.HTTP_202_ACCEPTED)
-    
+    # post를 보내면 django auth 내부의 logout() 매소드를 이용해서 로그 아웃
+
     def get(self, reqeust):
         return Response(None, status=status.HTTP_202_ACCEPTED)
 
@@ -47,3 +51,4 @@ class UserView(views.APIView):
         usernames = request.user.nickname
         queryset = User.objects.filter(nickname=usernames)
         return Response(queryset.values())
+    # user가 get 요청을 보내면 현재 로그인 되어있는 유저의 정보를 return
