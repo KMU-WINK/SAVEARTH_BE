@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 class BoardSerialier(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source = 'user.nickname')
+    
     class Meta:
         model = Board
         fields = ['id', 'user', 'title', 'location', 'content', 'like_cnt', 'comment_cnt']

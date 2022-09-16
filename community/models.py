@@ -1,7 +1,6 @@
 from django.db import models
 from users.models import User
 
-# Create your models here.
 class Board(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -14,13 +13,13 @@ class Board(models.Model):
     def __str__(self):
         return self.title
 
-    def comment_up(self):
+    def comment_up(self): # 댓글 갯수 증가 함수
         self.comment_cnt += 1
 
-    def like_up(self):
+    def like_up(self): # 좋아요 갯수 증가 함수
         self.like_cnt += 1
     
-    def like_down(self):
+    def like_down(self): # 좋아요 갯수 감소 함수
         self.like_cnt -= 1
 
 class Comment(models.Model):
